@@ -41,14 +41,13 @@ class _ReelsPageState extends State<ReelsPage> {
   @override
   void initState() {
     super.initState();
-    if (!UrlChecker.isImageUrl(widget.item.url) &&
-        UrlChecker.isValid(widget.item.url)) {
+    if (!UrlChecker.isImageUrl(widget.item.url) && UrlChecker.isValid(widget.item.url)) {
       initializePlayer();
     }
   }
 
   Future initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(widget.item.url);
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.item.url));
     await Future.wait([_videoPlayerController.initialize()]);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
@@ -58,8 +57,7 @@ class _ReelsPageState extends State<ReelsPage> {
     );
     setState(() {});
     _videoPlayerController.addListener(() {
-      if (_videoPlayerController.value.position ==
-          _videoPlayerController.value.duration) {
+      if (_videoPlayerController.value.position == _videoPlayerController.value.duration) {
         widget.swiperController.next();
       }
     });
@@ -83,8 +81,7 @@ class _ReelsPageState extends State<ReelsPage> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        _chewieController != null &&
-                _chewieController!.videoPlayerController.value.isInitialized
+        _chewieController != null && _chewieController!.videoPlayerController.value.isInitialized
             ? FittedBox(
                 fit: BoxFit.cover,
                 child: SizedBox(
@@ -108,11 +105,7 @@ class _ReelsPageState extends State<ReelsPage> {
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 10),
-                  Text('Loading...')
-                ],
+                children: const [CircularProgressIndicator(), SizedBox(height: 10), Text('Loading...')],
               ),
         if (_liked)
           const Center(
